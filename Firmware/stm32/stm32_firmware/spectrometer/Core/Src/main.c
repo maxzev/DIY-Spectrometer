@@ -109,7 +109,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  runSpectrometer();
+    runSpectrometer();
   }
   /* USER CODE END 3 */
 }
