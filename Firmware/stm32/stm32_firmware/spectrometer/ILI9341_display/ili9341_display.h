@@ -34,7 +34,8 @@ extern SPI_HandleTypeDef ILI9341_SPI_PORT;
 #define BLACK       0x0000
 #define OLIVE       0x7BE0
 #define LIGHTGREY   0xC618
-#define DARKGREY    0x7BEF
+//#define DARKGREY    0x7BEF
+#define DARKGREY    0x2986
 #define BLUE        0x001F
 #define GREEN       0x07E0
 #define CYAN        0x07FF
@@ -50,9 +51,13 @@ void ILI9341_Unselect(); // unselect CS of the display
 void ILI9341_Init();
 void ILI9341_WriteString(uint16_t x0, uint16_t y0, const char* str, Font font, uint16_t color, uint16_t bgcolor);
 void ILI9341_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, uint16_t color);
+void ILI9341_DrawHollowRectangle(uint16_t X0, uint16_t Y0, uint16_t X1, uint16_t Y1, uint16_t colour);
 void ILI9341_DrawHorizontalLine(uint16_t x0, uint16_t y0, uint16_t width, uint16_t color);
 void ILI9341_DrawVerticalLine(uint16_t x0, uint16_t y0, uint16_t height, uint16_t color);
 void ILI9341_FillScreen(uint16_t color);
 
+void ILI9341_FillRect(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, uint16_t color);
+void ILI9341_DrawFastHLine(int16_t x0, int16_t y0, int16_t width, uint16_t color);
+void ILI9341_DrawFastVLine(int16_t x0, int16_t y0, int16_t height, uint16_t color);
 
 #endif // __ILI9341_DISPLAY_H__

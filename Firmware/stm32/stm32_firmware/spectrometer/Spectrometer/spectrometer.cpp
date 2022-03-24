@@ -1,16 +1,21 @@
+#include <math.h>
+#include <stdio.h>  //for printf
+#include <limits.h> // for CHAR_BIT
+#include <cstring>
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
 
 #include "main.h"
-#include <math.h>
 #include "spectrometer.h"
-#include "ili9341_display.h"
+#include "../Gen/settings.h"
+#include "../Gui/display.h"
+
+
 
 
 #define CHANNELS 288   // from the C12880MA spec
 uint16_t data[CHANNELS];
-const int DELAY = 250;  // integration time adjustment
-
-// From the spec: the range is 340 -850 nm, distributed between 288 channels.
-// There must be something like this: (850 - 340)/288, approximately 1,77 nm per a channel, +/- 12 nm of spectral resolution.
+uint16_t dark[CHANNELS];
 float stepNm =  1.9; // ad hoc
 
 
@@ -33,16 +38,15 @@ static long mapVal(long x, long in_min, long in_max, long out_min, long out_max)
 
 void runSpectrometer()
 {
-	ILI9341_FillScreen(YELLOW);
-	delayMicroseconds(1000);
-
 	readSensor();
-	ILI9341_FillScreen(DARKGREY);
-	HAL_Delay(1000);
 	drawChart();
-	  //printData();
 
-	HAL_Delay(5000);  //5 sec
+	if(LogToConsole)
+	{
+	  printData();
+	}
+
+	HAL_Delay(2000);
 }
 
 
@@ -58,24 +62,24 @@ static void clockPulseNtimes(const int nTimes)
     for(int i=0; i<nTimes; ++i)
     {
         HAL_GPIO_WritePin(SPEC_CLK_GPIO_Port, SPEC_CLK_Pin, GPIO_PIN_SET);
-        delayMicroseconds(DELAY);
+        delayMicroseconds(SpecDelay);
         HAL_GPIO_WritePin(SPEC_CLK_GPIO_Port, SPEC_CLK_Pin, GPIO_PIN_RESET);
-        delayMicroseconds(DELAY);
+        delayMicroseconds(SpecDelay);
     }
 }
 
 
-// This function reads spectrometer data from pin VIDEO. See the Timing Chart in spec for details.
+// This function reads spectrometer pin VIDEO. See the Timing Chart in spec for details.
 static void readSensor()
 {
 	// Start clock cycle
     HAL_GPIO_WritePin(SPEC_CLK_GPIO_Port, SPEC_CLK_Pin, GPIO_PIN_RESET);
-    delayMicroseconds(DELAY);
+    delayMicroseconds(SpecDelay);
     HAL_GPIO_WritePin(SPEC_CLK_GPIO_Port, SPEC_CLK_Pin, GPIO_PIN_SET);
-    delayMicroseconds(DELAY);
+    delayMicroseconds(SpecDelay);
     HAL_GPIO_WritePin(SPEC_CLK_GPIO_Port, SPEC_CLK_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(SPEC_START_GPIO_Port, SPEC_START_Pin, GPIO_PIN_SET); //set pin START that starts an integration period (tpi(ST)), see spec
-    delayMicroseconds(DELAY); //delay for the SPEC_CLK!
+    delayMicroseconds(SpecDelay); //delay for the SPEC_CLK!
 
     //Sample for some period of time (depends on integration time you need)
 	clockPulseNtimes(15);
@@ -86,9 +90,10 @@ static void readSensor()
 	  //One more clock pulse before the actual read
 	clockPulseNtimes(1);
 
-	  //Read channels
+	//Read SPEC channels
 	for(int i = 0; i < CHANNELS; ++i)
 	{
+		//fetch only first channel of ADC and start again
 		HAL_ADC_Start(&SPEC_VIDEO_ADC);
 		HAL_ADC_PollForConversion(&SPEC_VIDEO_ADC, HAL_MAX_DELAY);
 		data[i] = HAL_ADC_GetValue(&SPEC_VIDEO_ADC);
@@ -99,23 +104,60 @@ static void readSensor()
 	 clockPulseNtimes(7);
 
 	 HAL_GPIO_WritePin(SPEC_CLK_GPIO_Port, SPEC_CLK_Pin, GPIO_PIN_SET);
-	 delayMicroseconds(DELAY);
+	 delayMicroseconds(SpecDelay);
 }
 
 
 static void printData()
 {
-//  for (int i = 0; i < CHANNELS; ++i)
-//  {
-//    for(int j=0; j< 16; ++j)  //16 values in one row
-//    {
-//      Serial.print(data[i]);
-//      Serial.print(',');
-//    }
-//    Serial.print("\n");
-//  }
-//  Serial.print("\n\n\n");
+	// Packet format: first number - sensitivity, then 288 channels
+	const int maxStrSize =  + (sizeof(SpecDelay)*CHAR_BIT)         // for sensitivity
+							+ 5*CHANNELS
+							+ 288 +1;                              // 288 for "," between and +1 for '\0'
+	char str[maxStrSize];
+	int strPos = 0;
+	strPos += sprintf(str+strPos, "%d", SpecDelay);
+	if(strPos <0)
+		return; //error!
+
+	str[strPos] = ',';
+	++strPos;
+
+	for (int i = 0; i < CHANNELS; ++i)
+	{
+		strPos += sprintf(str+strPos, "%d", data[i]);
+		if(strPos < 0)
+			return; //error!
+		str[strPos] = ',';
+		++strPos;
+	}
+
+	--strPos; // remove last ','
+
+	str[strPos] = '\0';
+	uint16_t len = strlen(str);
+
+	CDC_Transmit_FS((uint8_t*)str, len);
 }
+
+
+//Returns wavelength for every channel of the sensor.
+//See https://groupgets.com/manufacturers/hamamatsu-photonics/products/c12880ma-micro-spectrometer
+// for calibration formula and calibration data according to your sensor serial number.
+static float channel2wavelength(int CN)
+{
+	const float a0 = 310.9075849;
+	const float b1 = 2.714280624;
+	const float b2 = -0.001329954279;
+	const float b3 = -6.961112807E-06;
+	const float b4 = 8.397003579E-09;
+	const float b5 = 5.027463790E-12;
+
+	float r = a0 + b1*CN + b2*pow(CN, 2) + b3*pow(CN, 3) + b4*pow(CN, 4) + b5*pow(CN,5);
+
+	return r;
+}
+
 
 
 static void drawChart()
@@ -123,28 +165,41 @@ static void drawChart()
     const uint16_t x0 = 10;
     const uint16_t y0 = 220;
 
-    ILI9341_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
+    display_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
 
-    //X axis labels (ad hoc approximation!)
+    //X axis labels. See https://groupgets.com/manufacturers/hamamatsu-photonics/products/c12880ma-micro-spectrometer
+    // for calibration formula and calibration data according to your sensor serial number.
     const uint16_t yLabes = y0+7;
-    ILI9341_WriteString(x0,     yLabes, "34", Font_7x10, WHITE, DARKGREY); //~340 nm, Violet
-    ILI9341_WriteString(x0+45,  yLabes, "45", Font_7x10, WHITE, DARKGREY); //~450 nm, Blue
-    ILI9341_WriteString(x0+91,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
-    ILI9341_WriteString(x0+125, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
-    ILI9341_WriteString(x0+145, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Oragne
-    ILI9341_WriteString(x0+180, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
-    ILI9341_WriteString(x0+231, yLabes, "75", Font_7x10, WHITE, DARKGREY); //~750 nm, end of visible red
-    ILI9341_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
+    display_WriteString(x0,     yLabes, "32", Font_7x10, WHITE, DARKGREY); //~313 nm, Violet
+    display_WriteString(x0+45,  yLabes, "43", Font_7x10, WHITE, DARKGREY); //~429 nm, Blue
+    display_WriteString(x0+87,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
+    display_WriteString(x0+117, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
+    display_WriteString(x0+140, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Orange
+    display_WriteString(x0+166, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
+    display_WriteString(x0+200, yLabes, "76", Font_7x10, WHITE, DARKGREY); //~760 nm, end of visible red
+    display_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
 
 
-    const float startNm = 340;      // lower bound of CA12880ma's range (see spec)
-    // To scale the graph properly there should be integration time adjustment and dark scan subtraction.
-    // Currently, the scaleFactor = 20 is used for demonstration purpose.
-    const uint16_t scaleFactor = 20; // to fit the line's height inside TFT screen (currently 240x320)
+    // Note: There should be the integration time adjustment(sensitivity) and dark scan subtraction
+    //       to scale the graph on the display properly.
+    //       Currently, the scaleFactor = 20 is used
+    //       to fit the line's height inside TFT screen (currently 240x320).
+    const uint16_t scaleFactor = 20; //
 
-    for (int i = 0; i <CHANNELS; ++i)
+    // NOTE: dark scan values vary from channel to channel and depend on sensitivity and sensor type.
+    //       The value around 550-600 is dark scan for my sensor with the smallest sensitivity.
+    //       Can be used safely for any other sensitivity to fit the chart inside the display.
+    const uint16_t darkScan = 550;
+
+    for(int i=0; i<=CHANNELS; ++i)
     {
-      float nm = startNm + i*stepNm;
+    	uint16_t y1 = y0 - dark[i];
+    	display_DrawVerticalLine(x0+i, y1, dark[i], DARKGREY);
+    }
+
+    for (int i = 1; i <=CHANNELS; ++i)
+    {
+      float nm = channel2wavelength(i);
       RGBstruct color = wavelength2rgb(nm);
 
       uint16_t red565   = mapVal(color.red,   0, 255, 0, 31);
@@ -152,12 +207,17 @@ static void drawChart()
       uint16_t blue565  = mapVal(color.blue,  0, 255, 0, 31);
       uint16_t rgb565 = (red565 << 11)|(green565 << 5)|blue565; //RGB 5+6+5 bits
 
-      uint16_t height = data[i] / scaleFactor;
+      uint16_t height = (data[i-1] - darkScan) / scaleFactor;
       uint16_t y1 = y0 - height;
 
-      ILI9341_DrawVerticalLine(x0+i, y1, height, rgb565);
+      display_DrawVerticalLine(x0+i, y1, height, rgb565);
+
+      dark[i] = height;
     }//for
 }
+
+
+
 
 
 // Wavelength to RGB approximation

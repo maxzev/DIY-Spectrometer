@@ -1,12 +1,6 @@
-/*
- * delay.c
- *
- *  Created on: Mar 2, 2022
- *      Author: user
- */
+#include "delay.h"
+//#include "tim.h"
 
-#include <delay.h>
-#include "tim.h"
 #define DEALAY_USEC_TIMER htim2
 
 void delayMicroseconds(uint32_t us)

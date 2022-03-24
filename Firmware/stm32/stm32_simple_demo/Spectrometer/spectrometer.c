@@ -9,8 +9,6 @@
 uint16_t data[CHANNELS];
 const int DELAY = 250;  // integration time adjustment
 
-// From the spec: the range is 340 -850 nm, distributed between 288 channels.
-// There must be something like this: (850 - 340)/288, approximately 1,77 nm per a channel, +/- 12 nm of spectral resolution.
 float stepNm =  1.9; // ad hoc
 
 
@@ -125,15 +123,16 @@ static void drawChart()
 
     ILI9341_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
 
-    //X axis labels (ad hoc approximation!)
+    //X axis labels. See https://groupgets.com/manufacturers/hamamatsu-photonics/products/c12880ma-micro-spectrometer
+    // for calibration formula and calibration data according to your sensor serial number.
     const uint16_t yLabes = y0+7;
-    ILI9341_WriteString(x0,     yLabes, "34", Font_7x10, WHITE, DARKGREY); //~340 nm, Violet
-    ILI9341_WriteString(x0+45,  yLabes, "45", Font_7x10, WHITE, DARKGREY); //~450 nm, Blue
-    ILI9341_WriteString(x0+91,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
-    ILI9341_WriteString(x0+125, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
-    ILI9341_WriteString(x0+145, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Oragne
-    ILI9341_WriteString(x0+180, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
-    ILI9341_WriteString(x0+231, yLabes, "75", Font_7x10, WHITE, DARKGREY); //~750 nm, end of visible red
+    ILI9341_WriteString(x0,     yLabes, "32", Font_7x10, WHITE, DARKGREY); //~313 nm, Violet
+    ILI9341_WriteString(x0+45,  yLabes, "43", Font_7x10, WHITE, DARKGREY); //~429 nm, Blue
+    ILI9341_WriteString(x0+87,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
+    ILI9341_WriteString(x0+117, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
+    ILI9341_WriteString(x0+140, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Oragne
+    ILI9341_WriteString(x0+166, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
+    ILI9341_WriteString(x0+200, yLabes, "75", Font_7x10, WHITE, DARKGREY); //~750 nm, end of visible red
     ILI9341_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
 
 
