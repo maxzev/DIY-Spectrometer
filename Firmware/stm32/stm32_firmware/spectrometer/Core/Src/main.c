@@ -61,6 +61,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+bool menuBtnState = true;
 /* USER CODE END 0 */
 
 /**
@@ -95,6 +96,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART6_UART_Init();
   MX_ADC1_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start (&htim2); //start the timer
   ILI9341_Init();
@@ -108,6 +110,26 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	if(MainMenuActive)
+	{
+		mainMenu();
+				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+				  HAL_Delay(500);
+				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+				  HAL_Delay(500);
+				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+				  HAL_Delay(500);
+				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+					  	  HAL_Delay(500);
+					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+					  	  HAL_Delay(500);
+					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+					  	  HAL_Delay(500);
+					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+					  	  HAL_Delay(500);
+					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+	}
 
     runSpectrometer();
   }
@@ -158,6 +180,18 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+{
+	if(HAL_GPIO_ReadPin(MENU_BTN_GPIO_Port, MENU_BTN_Pin) == GPIO_PIN_RESET)
+	{
+		menuBtnState = true;
+		HAL_TIM_Base_Stop_IT(&htim5);
+		MainMenuActive = !MainMenuActive;
+	}
+}
+
+
 /**
   * @brief EXTI line detection callbacks
   * @param GPIO_Pin: Specifies the pins connected EXTI line
@@ -165,9 +199,11 @@ void SystemClock_Config(void)
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == MENU_BTN_Pin)
+  if(GPIO_Pin == MENU_BTN_Pin && true == menuBtnState)
   {
-	  MainMenuActive = !MainMenuActive;
+	  //MainMenuActive = !MainMenuActive;
+	  HAL_TIM_Base_Start_IT(&htim5);
+	  menuBtnState = false;
   }
 }
 /* USER CODE END 4 */
