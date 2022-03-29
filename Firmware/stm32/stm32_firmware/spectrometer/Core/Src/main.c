@@ -130,9 +130,12 @@ int main(void)
 					  	  HAL_Delay(500);
 					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
 	}
+	else
+	{
+		runSpectrometer();
+	}
 
-    runSpectrometer();
-  }
+  }//while
   /* USER CODE END 3 */
 }
 

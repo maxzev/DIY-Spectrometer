@@ -50,6 +50,7 @@ void ILI9341_Unselect(); // unselect CS of the display
 void ILI9341_Init();
 void ILI9341_WriteString(uint16_t x0, uint16_t y0, const char* str, Font font, uint16_t color, uint16_t bgcolor);
 void ILI9341_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, uint16_t color);
+void ILI9341_DrawHollowRectangle(uint16_t X0, uint16_t Y0, uint16_t X1, uint16_t Y1, uint16_t colour);
 void ILI9341_DrawHorizontalLine(uint16_t x0, uint16_t y0, uint16_t width, uint16_t color);
 void ILI9341_DrawVerticalLine(uint16_t x0, uint16_t y0, uint16_t height, uint16_t color);
 void ILI9341_FillScreen(uint16_t color);

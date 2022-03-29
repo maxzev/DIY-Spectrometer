@@ -1,10 +1,3 @@
-/*
- * mainmenu.h
- *
- *  Created on: Mar 19, 2022
- *      Author: user
- */
-
 #ifndef MAINMENU_H_
 #define MAINMENU_H_
 
@@ -12,6 +5,8 @@
 
 
 extern bool MainMenuActive;
+extern int MainMenuPos;
+
 void mainMenu();
 
 #endif /* MAINMENU_H_ */

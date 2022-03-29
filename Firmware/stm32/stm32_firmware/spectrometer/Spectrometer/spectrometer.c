@@ -2,7 +2,7 @@
 #include "main.h"
 #include <math.h>
 #include "spectrometer.h"
-#include "ili9341_display.h"
+#include "display.h"
 
 
 #define CHANNELS 288   // from the C12880MA spec
@@ -33,11 +33,11 @@ static long mapVal(long x, long in_min, long in_max, long out_min, long out_max)
 
 void runSpectrometer()
 {
-	ILI9341_FillScreen(YELLOW);
+	display_FillScreen(YELLOW);
 	delayMicroseconds(1000);
 
 	readSensor();
-	ILI9341_FillScreen(DARKGREY);
+	display_FillScreen(DARKGREY);
 	HAL_Delay(1000);
 	drawChart();
 	  //printData();
@@ -123,18 +123,18 @@ static void drawChart()
     const uint16_t x0 = 10;
     const uint16_t y0 = 220;
 
-    ILI9341_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
+    display_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
 
     //X axis labels (ad hoc approximation!)
     const uint16_t yLabes = y0+7;
-    ILI9341_WriteString(x0,     yLabes, "34", Font_7x10, WHITE, DARKGREY); //~340 nm, Violet
-    ILI9341_WriteString(x0+45,  yLabes, "45", Font_7x10, WHITE, DARKGREY); //~450 nm, Blue
-    ILI9341_WriteString(x0+91,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
-    ILI9341_WriteString(x0+125, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
-    ILI9341_WriteString(x0+145, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Oragne
-    ILI9341_WriteString(x0+180, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
-    ILI9341_WriteString(x0+231, yLabes, "75", Font_7x10, WHITE, DARKGREY); //~750 nm, end of visible red
-    ILI9341_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
+    display_WriteString(x0,     yLabes, "34", Font_7x10, WHITE, DARKGREY); //~340 nm, Violet
+    display_WriteString(x0+45,  yLabes, "45", Font_7x10, WHITE, DARKGREY); //~450 nm, Blue
+    display_WriteString(x0+91,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
+    display_WriteString(x0+125, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
+    display_WriteString(x0+145, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Oragne
+    display_WriteString(x0+180, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
+    display_WriteString(x0+231, yLabes, "75", Font_7x10, WHITE, DARKGREY); //~750 nm, end of visible red
+    display_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
 
 
     const float startNm = 340;      // lower bound of CA12880ma's range (see spec)
@@ -155,7 +155,7 @@ static void drawChart()
       uint16_t height = data[i] / scaleFactor;
       uint16_t y1 = y0 - height;
 
-      ILI9341_DrawVerticalLine(x0+i, y1, height, rgb565);
+      display_DrawVerticalLine(x0+i, y1, height, rgb565);
     }//for
 }
 

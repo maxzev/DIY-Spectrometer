@@ -303,6 +303,53 @@ void ILI9341_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t width, uint1
 }
 
 
+void ILI9341_DrawHollowRectangle(uint16_t X0, uint16_t Y0, uint16_t X1, uint16_t Y1, uint16_t Colour)
+{
+	uint16_t 	X_length = 0;
+	uint16_t 	Y_length = 0;
+	uint8_t		Negative_X = 0;
+	uint8_t 	Negative_Y = 0;
+	float 		Calc_Negative = 0;
+
+	Calc_Negative = X1 - X0;
+	if(Calc_Negative < 0)
+		Negative_X = 1;
+	Calc_Negative = 0;
+
+	Calc_Negative = Y1 - Y0;
+	if(Calc_Negative < 0)
+		Negative_Y = 1;
+
+
+	//DRAW HORIZONTAL!
+	if(!Negative_X)
+	{
+		X_length = X1 - X0;
+	}
+	else
+	{
+		X_length = X0 - X1;
+	}
+	ILI9341_DrawHorizontalLine(X0, Y0, X_length, Colour);
+	ILI9341_DrawHorizontalLine(X0, Y1, X_length, Colour);
+
+	//DRAW VERTICAL!
+	if(!Negative_Y)
+	{
+		Y_length = Y1 - Y0;
+	}
+	else
+	{
+		Y_length = Y0 - Y1;
+	}
+	ILI9341_DrawVerticalLine(X0, Y0, Y_length, Colour);
+	ILI9341_DrawVerticalLine(X1, Y0, Y_length, Colour);
+
+}
+
+
+
+
 void ILI9341_DrawVerticalLine(uint16_t x0, uint16_t y0, uint16_t height, uint16_t color)
 {
 	if((x0 >= ILI9341_WIDTH) || (y0 >= ILI9341_HEIGHT))
