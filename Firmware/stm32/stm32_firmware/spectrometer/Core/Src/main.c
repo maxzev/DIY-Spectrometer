@@ -98,7 +98,7 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start (&htim2); //start the timer
+  HAL_TIM_Base_Start (&htim2); //start timer for delayMicroseconds
   ILI9341_Init();
   spectrometerInit();
   /* USER CODE END 2 */
@@ -114,21 +114,84 @@ int main(void)
 	if(MainMenuActive)
 	{
 		mainMenu();
-				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-				  HAL_Delay(500);
-				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-				  HAL_Delay(500);
-				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-				  HAL_Delay(500);
-				  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-					  	  HAL_Delay(500);
-					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-					  	  HAL_Delay(500);
-					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-					  	  HAL_Delay(500);
-					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-					  	  HAL_Delay(500);
-					  	  HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+
+		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+		HAL_Delay(500);
+		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+		HAL_Delay(500);
+		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+		HAL_Delay(500);
+		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+		HAL_Delay(500);
+		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+		HAL_Delay(500);
+		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+		HAL_Delay(500);
+	    HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+		HAL_Delay(500);
+	    HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+
+		HAL_Delay(500);
+		HAL_Delay(500);
+		HAL_Delay(500);
+
+		//todo: for test only !
+
+//		while(1)
+//		{
+//			HAL_ADC_Start(&hadc1);
+//			//skip first ADC channel's value
+//			HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+//			int pressedButton = HAL_ADC_GetValue(&hadc1);
+//
+//			HAL_ADC_Start(&hadc1);
+//			HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+//			pressedButton = HAL_ADC_GetValue(&hadc1);
+//
+//			if(pressedButton < 3500)
+//			{
+//				if((pressedButton <= 1500) && (pressedButton > 500))
+//				{
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+//					HAL_Delay(500);
+//				}
+//				else if((pressedButton <= 2500) && (pressedButton > 1500))
+//				{
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+//					HAL_Delay(500);
+//				}
+//				else if((pressedButton <= 3500) && (pressedButton > 2500))
+//				{
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
+//					HAL_Delay(500);
+//					HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
+//					HAL_Delay(500);
+//				}
+//
+//				HAL_Delay(500);
+//			}
+//
+//
+//			if(!MainMenuActive)
+//				break;
+//
+//		}//while
 	}
 	else
 	{
@@ -174,7 +237,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV8;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
