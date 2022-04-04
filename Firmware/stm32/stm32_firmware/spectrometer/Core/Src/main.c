@@ -246,7 +246,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+// button debounce callback
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
 	if(HAL_GPIO_ReadPin(MENU_BTN_GPIO_Port, MENU_BTN_Pin) == GPIO_PIN_RESET)
@@ -254,7 +254,35 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		menuBtnState = true;
 		HAL_TIM_Base_Stop_IT(&htim5);
 		MainMenuActive = !MainMenuActive;
+
+		if(MainMenuActive)
+		{
+			MenuUp = false;
+			MenuDown = false;
+			MenuOk = false;
+
+			menuItemReset();
+		}
 	}
+	else if(HAL_GPIO_ReadPin(OK_BTN_GPIO_Port, OK_BTN_Pin) == GPIO_PIN_RESET)
+	{
+		menuBtnState = true;
+		MenuOk = true;
+		HAL_TIM_Base_Stop_IT(&htim5);
+	}
+	else if(HAL_GPIO_ReadPin(DOWN_BTN_GPIO_Port, DOWN_BTN_Pin) == GPIO_PIN_RESET)
+	{
+		menuBtnState = true;
+		MenuDown = true;
+		HAL_TIM_Base_Stop_IT(&htim5);
+	}
+	else if(HAL_GPIO_ReadPin(UP_BTN_GPIO_Port, UP_BTN_Pin) == GPIO_PIN_RESET)
+	{
+		menuBtnState = true;
+		MenuUp = true;
+		HAL_TIM_Base_Stop_IT(&htim5);
+	}
+
 }
 
 
@@ -265,12 +293,29 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == MENU_BTN_Pin && true == menuBtnState)
-  {
-	  //MainMenuActive = !MainMenuActive;
-	  HAL_TIM_Base_Start_IT(&htim5);
-	  menuBtnState = false;
-  }
+	HAL_TIM_Base_Start_IT(&htim5);
+	menuBtnState = false;
+
+//  if(GPIO_Pin == MENU_BTN_Pin && true == menuBtnState)
+//  {
+//	  HAL_TIM_Base_Start_IT(&htim5);
+//	  menuBtnState = false;
+//  }
+//  else if(GPIO_Pin == OK_BTN_Pin && true == menuBtnState)
+//  {
+//  	  HAL_TIM_Base_Start_IT(&htim5);
+//  	  menuBtnState = false;
+//  }
+//  else if(GPIO_Pin == DOWN_BTN_Pin && true == menuBtnState)
+//  {
+//      HAL_TIM_Base_Start_IT(&htim5);
+//      menuBtnState = false;
+//  }
+//  else if(GPIO_Pin == UP_BTN_Pin && true == menuBtnState)
+//  {
+//      HAL_TIM_Base_Start_IT(&htim5);
+//      menuBtnState = false;
+//  }
 }
 /* USER CODE END 4 */
 

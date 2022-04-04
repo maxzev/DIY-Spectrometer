@@ -86,8 +86,7 @@ static void readSensor()
 	  //One more clock pulse before the actual read
 	clockPulseNtimes(1);
 
-	  //Read SPEC channels
-	//HAL_ADC_Start(&SPEC_VIDEO_ADC); //todo: test!
+	//Read SPEC channels
 	for(int i = 0; i < CHANNELS; ++i)
 	{
 		//fetch only first channel of ADC and start again
@@ -95,14 +94,8 @@ static void readSensor()
 		HAL_ADC_PollForConversion(&SPEC_VIDEO_ADC, HAL_MAX_DELAY);
 		data[i] = HAL_ADC_GetValue(&SPEC_VIDEO_ADC);
 
-		//skip next channel
-		HAL_ADC_Start(&hadc1);
-		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-		uint16_t t = HAL_ADC_GetValue(&hadc1);
-
 		clockPulseNtimes(1);
 	 }
-	 //HAL_ADC_Stop(&SPEC_VIDEO_ADC); //todo: test!
 
 	 clockPulseNtimes(7);
 

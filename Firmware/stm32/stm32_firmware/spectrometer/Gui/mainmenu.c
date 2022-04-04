@@ -6,6 +6,10 @@
 
 
 bool MainMenuActive = false;
+bool MenuOk   = false;
+bool MenuUp   = false;
+bool MenuDown = false;
+
 static const int MainMenuItemNum = 3; // there are 3 menu items per each screen currently
 int CurrentMenuPos = 0;
 
@@ -20,8 +24,6 @@ void menuItemUp()
 		return;
 
 	--CurrentMenuPos;
-
-	HAL_Delay(500); //debounce
 }
 
 
@@ -29,14 +31,17 @@ void menuItemDown()
 {
 	if(CurrentMenuPos < MainMenuItemNum-1)
 		++CurrentMenuPos;
-
-	HAL_Delay(500); //debounce
 }
 
 
-void mainMenu()
+void menuItemReset()
 {
-	//todo: drawMainMenu();
+	CurrentMenuPos = 0;
+}
+
+
+void drawMainMenu()
+{
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
 	const char* title = "MENU";
 	display_WriteString(130, 30, title, Font_16x26, OLIVE, CYAN);
@@ -57,62 +62,44 @@ void mainMenu()
 	const char* darkscan = "Dark Scan elim.";
 	display_WriteString(85, 175, darkscan, Font_11x18, BLUE, elementColor);
 
-	//TODO: add PC connection settings button
-
 	//select the first item by default
+	menuItemReset();
 	display_DrawHollowRectangle(39, 69, elementWidth+1, elementHeight+1, RED);
-	CurrentMenuPos = 0;
+}
 
+
+void mainMenu()
+{
+	drawMainMenu();
 
 	while(1)
 	{
-		HAL_ADC_Start(&hadc1);
-		//skip first ADC channel's value
-		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-		int pressedButton = HAL_ADC_GetValue(&hadc1);
-
-		//fetch KEYPAD ADC channel's value
-		HAL_ADC_Start(&hadc1);
-		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-		pressedButton = HAL_ADC_GetValue(&hadc1);
-
-		if(pressedButton < 3500)
+		if(MenuOk)
 		{
-			if((pressedButton <= 1500) && (pressedButton > 500)) //Ok button
-			{
-				drawCurrentMenu();
-
-			}
-			else if((pressedButton <= 2500) && (pressedButton > 1500)) // Up button
-			{
-				unselectCurrentMenu();
-				menuItemUp();
-				selectCurrentMenu();
-			}
-			else if((pressedButton <= 3500) && (pressedButton > 2500)) // Down button
-			{
-				unselectCurrentMenu();
-				menuItemDown();
-				selectCurrentMenu();
-			}
+			MenuOk = false;
+			drawCurrentMenu();
+		}
+		else if(MenuUp)
+		{
+			MenuUp = false;
+			unselectCurrentMenu();
+			menuItemUp();
+			selectCurrentMenu();
+		}
+		else if(MenuDown)
+		{
+			MenuDown = false;
+			unselectCurrentMenu();
+			menuItemDown();
+			selectCurrentMenu();
 		}
 
-//		if(CurrentMenuPos != 1 && CurrentMenuPos != 2 && CurrentMenuPos != 0)
-//		{
-//			HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-//			HAL_Delay(500);
-//			HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-//			HAL_Delay(500);
-//			HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-//			HAL_Delay(500);
-//			HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-//			HAL_Delay(500);
-//		}
-
-
 		if(!MainMenuActive)
+		{
+			const char* title = "Exiting ...";
+			display_WriteString(90, 100, title, Font_16x26, RED, CYAN);
 			break;
-
+		}
 	}//while
 }
 
