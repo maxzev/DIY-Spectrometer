@@ -13,21 +13,21 @@ SensitivityMenu::SensitivityMenu()
 
 void SensitivityMenu::selectCurrentItem()
 {
-	if(CurrentMenuPos >= SensMenuMaxNum)
+	if(CurrentMenuPos >= m_menuItemNum)
 		return; // todo: handle an error!
 
-	uint16_t arr [SensMenuMaxNum] = {0, 20, 40, 60};
-	display_DrawHollowRectangle(x0+ arr[CurrentMenuPos] -2, y0-10, 20, 40, RED);
+	uint16_t arr [m_menuItemNum] = {0, 20, 40, 60};
+	display_DrawHollowRectangle(m_x0+ arr[CurrentMenuPos] -2, m_y0-10, 20, 40, RED);
 }
 
 
 void SensitivityMenu::unselectCurrentItem()
 {
-	if(CurrentMenuPos >= SensMenuMaxNum)
+	if(CurrentMenuPos >= m_menuItemNum)
 		return; // todo: handle an error!
 
-	uint16_t arr [SensMenuMaxNum] = {0, 20, 40, 60};
-	display_DrawHollowRectangle(x0+ arr[CurrentMenuPos] -2, y0-10, 20, 40, WHITE);
+	uint16_t arr [m_menuItemNum] = {0, 20, 40, 60};
+	display_DrawHollowRectangle(m_x0+ arr[CurrentMenuPos] -2, m_y0-10, 20, 40, WHITE);
 }
 
 
@@ -60,7 +60,7 @@ void SensitivityMenu::show()
 
 			BtnDown = false;
 			unselectCurrentItem();
-			MenuItemDown(SensMenuMaxNum);
+			MenuItemDown(m_menuItemNum);
 			selectCurrentItem();
 		}
 
@@ -92,7 +92,7 @@ void SensitivityMenu::drawMenu()
 		--i;
 	}
 
-	display_DrawFilledRectangle(x0-10, y0-10, 100, 40, WHITE);
+	display_DrawFilledRectangle(m_x0-10, m_y0-10, 100, 40, WHITE);
 
 	uint16_t xOff = 0;
 	for(int i=0; i<N; ++i)
@@ -100,14 +100,14 @@ void SensitivityMenu::drawMenu()
 		char s[2] = {'a', '\0'};
 		itoa(arr[i], s, 10);
 
-		display_WriteString(x0+xOff, y0, s, Font_16x26, BLACK, WHITE);
+		display_WriteString(m_x0+xOff, m_y0, s, Font_16x26, BLACK, WHITE);
 		xOff += 20;
 	}
 
-	display_WriteString(x0-10, y0+50, "<---->", Font_16x26, BLACK, CYAN);
+	display_WriteString(m_x0-10, m_y0+50, "+ <---> -", Font_16x26, BLACK, CYAN);
 
-	//select default digit
-	display_DrawHollowRectangle(x0-2, y0-10, 20, 40, RED);
+	//select default item
+	display_DrawHollowRectangle(m_x0-2, m_y0-10, 20, 40, RED);
 }
 
 

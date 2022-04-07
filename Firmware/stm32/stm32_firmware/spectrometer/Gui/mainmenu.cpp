@@ -3,81 +3,81 @@
 #include "sensitivity_menu.h"
 
 
-static const int MainMenuMaxNum = 3; // there are 3 menu items per each screen currently
-static uint16_t elementWidth  = 240;
-static uint16_t elementHeight = 30;
-static uint16_t elementColor  = 0xEDEA;
 
-
-static void selectCurrentMenu()
+MainMenu::MainMenu()
 {
-	if(CurrentMenuPos >= MainMenuMaxNum)
-		return; // todo: handle an error!
-
-	uint16_t arr [MainMenuMaxNum] = {69, 119, 169};
-	display_DrawHollowRectangle(39, arr[CurrentMenuPos], elementWidth+1, elementHeight+1, RED);
 }
 
 
-static void unselectCurrentMenu()
+void MainMenu::selectCurrentItem()
 {
-	if(CurrentMenuPos >= MainMenuMaxNum)
+	if(CurrentMenuPos >= m_menuItemNum)
 		return; // todo: handle an error!
 
-	uint16_t arr [MainMenuMaxNum] = {69, 119, 169};
-	display_DrawHollowRectangle(39, arr[CurrentMenuPos], elementWidth+1, elementHeight+1, CYAN);
+	uint16_t arr [m_menuItemNum] = {69, 119, 169};
+	display_DrawHollowRectangle(39, arr[CurrentMenuPos], m_elementWidth+1, m_elementHeight+1, RED);
 }
 
 
-void drawMainMenu()
+void MainMenu::unselectCurrentItem()
+{
+	if(CurrentMenuPos >= m_menuItemNum)
+		return; // todo: handle an error!
+
+	uint16_t arr [m_menuItemNum] = {69, 119, 169};
+	display_DrawHollowRectangle(39, arr[CurrentMenuPos], m_elementWidth+1, m_elementHeight+1, CYAN);
+}
+
+
+void MainMenu::drawMenu()
 {
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
 	const char* title = "MENU";
 	display_WriteString(130, 30, title, Font_16x26, OLIVE, CYAN);
 
-	display_DrawFilledRectangle(40, 70, elementWidth, elementHeight, elementColor);
+	display_DrawFilledRectangle(40, 70, m_elementWidth, m_elementHeight, m_elementColor);
 	const char* sens = "Sensitivity";
-	display_WriteString(105, 75, sens, Font_11x18, BLUE, elementColor);
+	display_WriteString(105, 75, sens, Font_11x18, BLUE, m_elementColor);
 
-	display_DrawFilledRectangle(40, 120, elementWidth, elementHeight, elementColor);
+	display_DrawFilledRectangle(40, 120, m_elementWidth, m_elementHeight, m_elementColor);
 	const char* pres = "Presets";
-	display_WriteString(125, 125, pres, Font_11x18, BLUE, elementColor);
+	display_WriteString(125, 125, pres, Font_11x18, BLUE, m_elementColor);
 
-	display_DrawFilledRectangle(40, 170, elementWidth, elementHeight, elementColor);
+	display_DrawFilledRectangle(40, 170, m_elementWidth, m_elementHeight, m_elementColor);
 	const char* darkscan = "Dark Scan elim.";
-	display_WriteString(85, 175, darkscan, Font_11x18, BLUE, elementColor);
+	display_WriteString(85, 175, darkscan, Font_11x18, BLUE, m_elementColor);
 
 	//select the first item
 	MenuItemReset();
-	display_DrawHollowRectangle(39, 69, elementWidth+1, elementHeight+1, RED);
+	display_DrawHollowRectangle(39, 69, m_elementWidth+1, m_elementHeight+1, RED);
 }
 
 
-void mainMenu()
+void MainMenu::show()
 {
 	MenuItemReset();
-	drawMainMenu();
+	drawMenu();
 
 	while(1)
 	{
 		if(BtnOk)
 		{
 			BtnOk = false;
-			drawCurrentMenuMain();
+			drawCurrentMenuItem();
 		}
 		else if(BtnUp)
 		{
 			BtnUp = false;
-			unselectCurrentMenu();
+			unselectCurrentItem();
 			MenuItemUp();
-			selectCurrentMenu();
+			selectCurrentItem();
 		}
 		else if(BtnDown)
 		{
 			BtnDown = false;
-			unselectCurrentMenu();
-			MenuItemDown(MainMenuMaxNum);
-			selectCurrentMenu();
+			unselectCurrentItem();
+			MenuItemDown(m_menuItemNum);
+			selectCurrentItem();
 		}
 
 		if(!MainMenuActive)
@@ -90,7 +90,7 @@ void mainMenu()
 }
 
 
-void drawCurrentMenuMain()
+void MainMenu::drawCurrentMenuItem()
 {
 	//todo: refactor me!
 	if(0 == CurrentMenuPos)
@@ -108,14 +108,14 @@ void drawCurrentMenuMain()
 }
 
 
-void sensitivityMenu()
+void MainMenu::sensitivityMenu()
 {
 	SensitivityMenu sensMenu;
     sensMenu.show();
 }
 
 
-void presetsMenu()
+void MainMenu::presetsMenu()
 {
 	//draw menu
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
@@ -126,7 +126,7 @@ void presetsMenu()
 }
 
 
-void darkScanMenu()
+void MainMenu::darkScanMenu()
 {
 	//draw menu
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
