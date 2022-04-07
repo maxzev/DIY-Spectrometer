@@ -48,14 +48,14 @@ void drawMainMenu()
 	display_WriteString(85, 175, darkscan, Font_11x18, BLUE, elementColor);
 
 	//select the first item
-	menuItemReset();
+	MenuItemReset();
 	display_DrawHollowRectangle(39, 69, elementWidth+1, elementHeight+1, RED);
 }
 
 
 void mainMenu()
 {
-	menuItemReset();
+	MenuItemReset();
 	drawMainMenu();
 
 	while(1)
@@ -69,14 +69,14 @@ void mainMenu()
 		{
 			BtnUp = false;
 			unselectCurrentMenu();
-			menuItemUp();
+			MenuItemUp();
 			selectCurrentMenu();
 		}
 		else if(BtnDown)
 		{
 			BtnDown = false;
 			unselectCurrentMenu();
-			menuItemDown(MainMenuMaxNum);
+			MenuItemDown(MainMenuMaxNum);
 			selectCurrentMenu();
 		}
 
@@ -110,7 +110,8 @@ void drawCurrentMenuMain()
 
 void sensitivityMenu()
 {
-	sensMenu();
+	SensitivityMenu sensMenu;
+    sensMenu.show();
 }
 
 

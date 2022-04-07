@@ -10,7 +10,7 @@ bool BtnDown = false;
 int CurrentMenuPos = 0;
 
 
-void menuItemUp()
+void MenuItemUp()
 {
 	if(0 == CurrentMenuPos)
 		return;
@@ -19,14 +19,14 @@ void menuItemUp()
 }
 
 
-void menuItemDown(const int maxPos)
+void MenuItemDown(const int maxPos)
 {
 	if(CurrentMenuPos < maxPos-1)
 		++CurrentMenuPos;
 }
 
 
-void menuItemReset()
+void MenuItemReset()
 {
 	CurrentMenuPos = 0;
 }

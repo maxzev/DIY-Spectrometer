@@ -6,12 +6,12 @@
 #include "../Gen/settings.h"
 
 
+SensitivityMenu::SensitivityMenu()
+{
+}
 
-static const int SensMenuMaxNum = 4; // zero based index
-static const uint16_t x0 = 120;
-static const uint16_t y0 = 100;
 
-static void selectCurrentMenu()
+void SensitivityMenu::selectCurrentItem()
 {
 	if(CurrentMenuPos >= SensMenuMaxNum)
 		return; // todo: handle an error!
@@ -21,7 +21,7 @@ static void selectCurrentMenu()
 }
 
 
-static void unselectCurrentMenu()
+void SensitivityMenu::unselectCurrentItem()
 {
 	if(CurrentMenuPos >= SensMenuMaxNum)
 		return; // todo: handle an error!
@@ -32,10 +32,10 @@ static void unselectCurrentMenu()
 
 
 
-void sensMenu()
+void SensitivityMenu::show()
 {
-	menuItemReset();
-	drawSensMenu();
+	MenuItemReset();
+	drawMenu();
 
 	while(1)
 	{
@@ -47,9 +47,9 @@ void sensMenu()
 		else if(BtnUp)
 		{
 			BtnUp = false;
-			unselectCurrentMenu();
-			menuItemUp();
-			selectCurrentMenu();
+			unselectCurrentItem();
+			MenuItemUp();
+			selectCurrentItem();
 		}
 		else if(BtnDown)
 		{
@@ -59,9 +59,9 @@ void sensMenu()
 //			HAL_Delay(500);
 
 			BtnDown = false;
-			unselectCurrentMenu();
-			menuItemDown(SensMenuMaxNum);
-			selectCurrentMenu();
+			unselectCurrentItem();
+			MenuItemDown(SensMenuMaxNum);
+			selectCurrentItem();
 		}
 
 		if(!MainMenuActive)
@@ -74,7 +74,7 @@ void sensMenu()
 }
 
 
-void drawSensMenu()
+void SensitivityMenu::drawMenu()
 {
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
 	const char* title = "Sensitivity";
