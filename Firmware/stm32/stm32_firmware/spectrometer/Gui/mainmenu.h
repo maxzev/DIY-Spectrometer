@@ -20,7 +20,6 @@ private:
 	const int m_menuItemNum = 3; // there are 3 menu items per each screen currently
 	uint16_t  m_elementWidth  = 240;
 	uint16_t  m_elementHeight = 30;
-	uint16_t  m_elementColor  = 0xEDEA;
 
 	void drawMenu();
 	void drawCurrentMenuItem();

@@ -35,17 +35,17 @@ void MainMenu::drawMenu()
 	const char* title = "MENU";
 	display_WriteString(130, 30, title, Font_16x26, OLIVE, CYAN);
 
-	display_DrawFilledRectangle(40, 70, m_elementWidth, m_elementHeight, m_elementColor);
+	display_DrawFilledRectangle(40, 70, m_elementWidth, m_elementHeight, MenuButtonColor);
 	const char* sens = "Sensitivity";
-	display_WriteString(105, 75, sens, Font_11x18, BLUE, m_elementColor);
+	display_WriteString(105, 75, sens, Font_11x18, BLUE, MenuButtonColor);
 
-	display_DrawFilledRectangle(40, 120, m_elementWidth, m_elementHeight, m_elementColor);
+	display_DrawFilledRectangle(40, 120, m_elementWidth, m_elementHeight, MenuButtonColor);
 	const char* pres = "Presets";
-	display_WriteString(125, 125, pres, Font_11x18, BLUE, m_elementColor);
+	display_WriteString(125, 125, pres, Font_11x18, BLUE, MenuButtonColor);
 
-	display_DrawFilledRectangle(40, 170, m_elementWidth, m_elementHeight, m_elementColor);
+	display_DrawFilledRectangle(40, 170, m_elementWidth, m_elementHeight, MenuButtonColor);
 	const char* darkscan = "Dark Scan elim.";
-	display_WriteString(85, 175, darkscan, Font_11x18, BLUE, m_elementColor);
+	display_WriteString(85, 175, darkscan, Font_11x18, BLUE, MenuButtonColor);
 
 	//select the first item
 	MenuItemReset();
@@ -83,6 +83,7 @@ void MainMenu::show()
 		if(!MainMenuActive)
 		{
 			const char* title = "Exiting ...";
+			display_DrawFilledRectangle(60, 80, 200, 60, CYAN);
 			display_WriteString(90, 100, title, Font_16x26, RED, CYAN);
 			break;
 		}

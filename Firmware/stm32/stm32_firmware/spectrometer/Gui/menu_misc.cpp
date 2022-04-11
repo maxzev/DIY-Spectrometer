@@ -8,6 +8,8 @@ bool BtnUp   = false;
 bool BtnDown = false;
 
 int CurrentMenuPos = 0;
+const uint16_t MenuButtonColor  = 0xEDEA;
+
 
 
 void MenuItemUp()
