@@ -143,6 +143,7 @@ void SensitivityMenu::drawMenu()
 void SensitivityMenu::setNewSensitivity()
 {
 	SpecDelay = m_sensArr[0]*1000 + m_sensArr[1]*100 + m_sensArr[2]*10 + m_sensArr[3];
+	//todo: save value to EEPROM
 }
 
 
@@ -155,7 +156,6 @@ void SensitivityMenu::editNum()
 		if(BtnOk)
 		{
 			BtnOk = false;
-
 			break;
 		}
 		else if(BtnUp)
@@ -209,7 +209,7 @@ void SensitivityMenu::numberDec(const int pos)
 	if(a <= 0) // must be from 0 to 9
 		return;
 
-	//increase a number and display it
+	//decrease a number and display it
 	--a;
 	m_sensArr[pos] = a;
 	char s[2] = {'a', '\0'};

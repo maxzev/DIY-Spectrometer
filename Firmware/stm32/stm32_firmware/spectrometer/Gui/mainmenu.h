@@ -17,7 +17,7 @@ public:
 
 private:
 
-	const int m_menuItemNum = 3; // there are 3 menu items per each screen currently
+	const int m_menuItemNum = 3; //currently, there are 3 menu items on every screen
 	uint16_t  m_elementWidth  = 240;
 	uint16_t  m_elementHeight = 30;
 
@@ -32,15 +32,6 @@ private:
 	void unselectCurrentItem();
 
 };
-
-
-//void mainMenu();
-//void drawMainMenu();
-//void drawCurrentMenuMain();
-//
-//void sensitivityMenu();
-//void presetsMenu();
-//void darkScanMenu();
 
 
 #endif /* MAINMENU_H_ */

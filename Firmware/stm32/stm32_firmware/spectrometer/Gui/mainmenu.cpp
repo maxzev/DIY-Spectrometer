@@ -93,7 +93,6 @@ void MainMenu::show()
 
 void MainMenu::drawCurrentMenuItem()
 {
-	//todo: refactor me!
 	if(0 == CurrentMenuPos)
 	{
 		sensitivityMenu();
@@ -118,23 +117,23 @@ void MainMenu::sensitivityMenu()
 
 void MainMenu::presetsMenu()
 {
-	//draw menu
+	//todo: for test
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
 	const char* title = "Presets";
 	display_WriteString(110, 30, title, Font_16x26, OLIVE, CYAN);
 
-	//todo: listen to the keypad
+	//todo: coming soon
 }
 
 
 void MainMenu::darkScanMenu()
 {
-	//draw menu
+	//todo: for test
 	display_DrawFilledRectangle(20, 20, 280, 200, CYAN);
 	const char* title = "Dark Scan elim.";
 	display_WriteString(45, 30, title, Font_16x26, OLIVE, CYAN);
 
-	//todo: listen to the keypad
+	//todo: coming soon
 }
 
 
