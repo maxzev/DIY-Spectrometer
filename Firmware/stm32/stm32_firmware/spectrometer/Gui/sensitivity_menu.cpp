@@ -183,7 +183,7 @@ void SensitivityMenu::editNum()
 
 void SensitivityMenu::numberInc(const int pos)
 {
-	if(pos >= m_SensArrSize)
+	if(pos < 0 || pos >= m_SensArrSize)
 		return; //todo: handle an error
 
 	int a =	m_sensArr[pos];
@@ -202,7 +202,7 @@ void SensitivityMenu::numberInc(const int pos)
 
 void SensitivityMenu::numberDec(const int pos)
 {
-	if(pos <= 0)
+	if(pos < 0 || pos >= m_SensArrSize)
 		return; //todo: handle an error
 
 	int a =	m_sensArr[pos];
