@@ -50,7 +50,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,9 +98,9 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI2_Init();
   MX_TIM2_Init();
-  MX_USART6_UART_Init();
   MX_ADC1_Init();
   MX_TIM5_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start (&htim2); //start timer for delayMicroseconds
   ILI9341_Init();
@@ -186,6 +190,15 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+PUTCHAR_PROTOTYPE
+{
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
+
+
+
 // button debounce callback
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {

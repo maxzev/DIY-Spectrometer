@@ -1,9 +1,12 @@
 #include <math.h>
+#include <stdio.h> //for printf
 
 #include "main.h"
 #include "spectrometer.h"
 #include "../Gen/settings.h"
 #include "display.h"
+
+
 
 
 #define CHANNELS 288   // from the C12880MA spec
@@ -40,7 +43,11 @@ void runSpectrometer()
 	display_FillScreen(DARKGREY);
 	HAL_Delay(1000);
 	drawChart();
-	  //printData();
+
+	if(LogToConsole)
+	{
+	  printData();
+	}
 
 	HAL_Delay(5000);  //5 sec
 }
@@ -106,16 +113,14 @@ static void readSensor()
 
 static void printData()
 {
-//  for (int i = 0; i < CHANNELS; ++i)
-//  {
-//    for(int j=0; j< 16; ++j)  //16 values in one row
-//    {
-//      Serial.print(data[i]);
-//      Serial.print(',');
-//    }
-//    Serial.print("\n");
-//  }
-//  Serial.print("\n\n\n");
+  for (int i = 0; i < CHANNELS; ++i)
+  {
+      printf("%d", data[i]);
+      printf("%c", ',');
+
+  }
+
+  printf("%s", "\n\n\n");
 }
 
 
