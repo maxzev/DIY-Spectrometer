@@ -34,7 +34,8 @@ extern SPI_HandleTypeDef ILI9341_SPI_PORT;
 #define BLACK       0x0000
 #define OLIVE       0x7BE0
 #define LIGHTGREY   0xC618
-#define DARKGREY    0x7BEF
+//#define DARKGREY    0x7BEF
+#define DARKGREY    0x2986
 #define BLUE        0x001F
 #define GREEN       0x07E0
 #define CYAN        0x07FF
