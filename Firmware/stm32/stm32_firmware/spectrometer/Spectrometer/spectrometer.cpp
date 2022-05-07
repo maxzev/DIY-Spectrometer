@@ -1,5 +1,5 @@
 #include <math.h>
-#include <stdio.h> //for printf
+//#include <stdio.h> //for printf
 
 #include "main.h"
 #include "spectrometer.h"
@@ -11,9 +11,6 @@
 
 #define CHANNELS 288   // from the C12880MA spec
 uint16_t data[CHANNELS];
-
-// From the spec: the range is 340 -850 nm, distributed between 288 channels.
-// There must be something like this: (850 - 340)/288, approximately 1,77 nm per a channel, +/- 12 nm of spectral resolution.
 float stepNm =  1.9; // ad hoc
 
 
@@ -28,7 +25,7 @@ typedef struct
 //static funcs declaration
 static void clockPulseNtimes(const int nTimes);
 static void readSensor();
-static void printData();
+//static void printData();
 static void drawChart();
 static RGBstruct wavelength2rgb(const float wavelength);
 static long mapVal(long x, long in_min, long in_max, long out_min, long out_max);
@@ -44,10 +41,10 @@ void runSpectrometer()
 	HAL_Delay(1000);
 	drawChart();
 
-	if(LogToConsole)
-	{
-	  printData();
-	}
+	//if(LogToConsole)
+	//{
+	 // printData();
+	//}
 
 	HAL_Delay(5000);  //5 sec
 }
@@ -111,17 +108,36 @@ static void readSensor()
 }
 
 
-static void printData()
-{
-  for (int i = 0; i < CHANNELS; ++i)
-  {
-      printf("%d", data[i]);
-      printf("%c", ',');
+//static void printData()
+//{
+//  for (int i = 0; i < CHANNELS; ++i)
+//  {
+//      printf("%d", data[i]);
+//      printf("%c", ',');
+//
+//  }
+//
+//  printf("%s", "\n\n\n");
+//}
 
-  }
 
-  printf("%s", "\n\n\n");
-}
+//Returns wavelength for every channel of the sensor.
+//See https://groupgets.com/manufacturers/hamamatsu-photonics/products/c12880ma-micro-spectrometer
+// for calibration formula and calibration data according to your sensor serial number.
+//static float channel2wavelength(int CN)
+//{
+//	const float a0 = 3.109075849E+02;
+//	const float b1 = 2.714280624E+00;
+//	const float b2 = -1.329954279E-03;
+//	const float b3 = -6.961112807E-06;
+//	const float b4 = 8.397003579E-09;
+//	const float b5 = 5.027463790E-12;
+//
+//	float r = a0 + b1*CN + b2*pow(CN, 2) + b3*pow(CN, 3) + b4*pow(CN, 4) + b5*pow(CN,5);
+//
+//	return r;
+//}
+
 
 
 static void drawChart()
@@ -131,15 +147,16 @@ static void drawChart()
 
     display_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
 
-    //X axis labels (ad hoc approximation!)
+    //X axis labels. See https://groupgets.com/manufacturers/hamamatsu-photonics/products/c12880ma-micro-spectrometer
+    // for calibration formula and calibration data according to your sensor serial number.
     const uint16_t yLabes = y0+7;
-    display_WriteString(x0,     yLabes, "34", Font_7x10, WHITE, DARKGREY); //~340 nm, Violet
-    display_WriteString(x0+45,  yLabes, "45", Font_7x10, WHITE, DARKGREY); //~450 nm, Blue
-    display_WriteString(x0+91,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
-    display_WriteString(x0+125, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
-    display_WriteString(x0+145, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Oragne
-    display_WriteString(x0+180, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
-    display_WriteString(x0+231, yLabes, "75", Font_7x10, WHITE, DARKGREY); //~750 nm, end of visible red
+    display_WriteString(x0,     yLabes, "32", Font_7x10, WHITE, DARKGREY); //~313 nm, Violet
+    display_WriteString(x0+45,  yLabes, "43", Font_7x10, WHITE, DARKGREY); //~429 nm, Blue
+    display_WriteString(x0+87,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
+    display_WriteString(x0+117, yLabes, "62", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
+    display_WriteString(x0+140, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Orange
+    display_WriteString(x0+166, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
+    display_WriteString(x0+200, yLabes, "76", Font_7x10, WHITE, DARKGREY); //~760 nm, end of visible red
     display_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
 
 
@@ -151,6 +168,7 @@ static void drawChart()
     for (int i = 0; i <CHANNELS; ++i)
     {
       float nm = startNm + i*stepNm;
+      //float nm = channel2wavelength(i);
       RGBstruct color = wavelength2rgb(nm);
 
       uint16_t red565   = mapVal(color.red,   0, 255, 0, 31);
