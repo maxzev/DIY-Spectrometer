@@ -69,7 +69,7 @@ static void clockPulseNtimes(const int nTimes)
 }
 
 
-// This function reads spectrometer data from pin VIDEO. See the Timing Chart in spec for details.
+// This function reads spectrometer pin VIDEO. See the Timing Chart in spec for details.
 static void readSensor()
 {
 	// Start clock cycle
@@ -140,51 +140,6 @@ static float channel2wavelength(int CN)
 
 
 
-//static void drawChart()
-//{
-//    const uint16_t x0 = 10;
-//    const uint16_t y0 = 220;
-//
-//    display_DrawHorizontalLine(x0, y0, CHANNELS, BLACK);
-//
-//    //X axis labels. See https://groupgets.com/manufacturers/hamamatsu-photonics/products/c12880ma-micro-spectrometer
-//    // for calibration formula and calibration data according to your sensor serial number.
-//    const uint16_t yLabes = y0+7;
-//    display_WriteString(x0,     yLabes, "32", Font_7x10, WHITE, DARKGREY); //~313 nm, Violet
-//    display_WriteString(x0+45,  yLabes, "43", Font_7x10, WHITE, DARKGREY); //~429 nm, Blue
-//    display_WriteString(x0+87,  yLabes, "53", Font_7x10, WHITE, DARKGREY); //~532 nm, Green laser 532nm
-//    display_WriteString(x0+117, yLabes, "60", Font_7x10, WHITE, DARKGREY); //~600 nm, Yellow
-//    display_WriteString(x0+140, yLabes, "65", Font_7x10, WHITE, DARKGREY); //~650 nm, Orange
-//    display_WriteString(x0+166, yLabes, "70", Font_7x10, WHITE, DARKGREY); //~700 nm, Red
-//    display_WriteString(x0+200, yLabes, "76", Font_7x10, WHITE, DARKGREY); //~760 nm, end of visible red
-//    display_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
-//
-//
-//    const float startNm = 340;      // lower bound of CA12880ma's range (see spec)
-//    // To scale the graph properly there should be integration time adjustment and dark scan subtraction.
-//    // Currently, the scaleFactor = 20 is used for demonstration purpose.
-//    const uint16_t scaleFactor = 20; // to fit the line's height inside TFT screen (currently 240x320)
-//
-//    for (int i = 0; i <CHANNELS; ++i)
-//    {
-//      //float nm = startNm + i*stepNm;
-//      float nm = channel2wavelength(i);
-//      RGBstruct color = wavelength2rgb(nm);
-//
-//      uint16_t red565   = mapVal(color.red,   0, 255, 0, 31);
-//      uint16_t green565 = mapVal(color.green, 0, 255, 0, 63);
-//      uint16_t blue565  = mapVal(color.blue,  0, 255, 0, 31);
-//      uint16_t rgb565 = (red565 << 11)|(green565 << 5)|blue565; //RGB 5+6+5 bits
-//
-//      uint16_t height = data[i] / scaleFactor;
-//      uint16_t y1 = y0 - height;
-//
-//      display_DrawVerticalLine(x0+i, y1, height, rgb565);
-//    }//for
-//}
-
-
-
 static void drawChart()
 {
     const uint16_t x0 = 10;
@@ -205,14 +160,12 @@ static void drawChart()
     display_WriteString(x0+280, yLabes, "x10", Font_7x10, WHITE, DARKGREY); //x10 label
 
 
-    const float startNm = 340;      // lower bound of CA12880ma's range (see spec)
-    // To scale the graph properly there should be integration time adjustment and dark scan subtraction.
+    // TODO: To scale the graph properly, there should be integration time adjustment and dark scan subtraction.
     // Currently, the scaleFactor = 20 is used for demonstration purpose.
     const uint16_t scaleFactor = 20; // to fit the line's height inside TFT screen (currently 240x320)
 
     for (int i = 1; i <=CHANNELS; ++i)
     {
-      //float nm = startNm + i*stepNm;
       float nm = channel2wavelength(i);
       RGBstruct color = wavelength2rgb(nm);
 

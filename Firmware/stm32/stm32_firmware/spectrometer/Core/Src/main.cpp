@@ -118,6 +118,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
+	if(MainMenuActive)
+	{
+		MainMenu mainMenu;
+		mainMenu.show();
+	}
+	else
+	{
 //		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
 //		HAL_Delay(500);
 //		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
@@ -126,43 +133,9 @@ int main(void)
 //		HAL_Delay(500);
 //		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
 //		HAL_Delay(500);
-
-
-//	if(MainMenuActive)
-//	{
-//		MainMenu mainMenu;
-//		mainMenu.show();
-//
-//		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-//		HAL_Delay(500);
-//		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-//		HAL_Delay(500);
-//		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-//		HAL_Delay(500);
-//		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-//		HAL_Delay(500);
-//		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-//		HAL_Delay(500);
-//		HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-//		HAL_Delay(500);
-//	    HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-//		HAL_Delay(500);
-//	    HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-//		HAL_Delay(500);
-//	}
-//	else
-//	{
-				HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-				HAL_Delay(500);
-				HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-				HAL_Delay(500);
-				HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_RESET);
-				HAL_Delay(500);
-				HAL_GPIO_WritePin(ONBOARD_LED_GPIO_Port, ONBOARD_LED_Pin, GPIO_PIN_SET);
-				HAL_Delay(500);
 
 		runSpectrometer();
-//	}
+	}
 
   }//while
   /* USER CODE END 3 */
