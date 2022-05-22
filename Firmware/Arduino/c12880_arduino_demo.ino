@@ -28,8 +28,6 @@ const int CHANNELS = 288;     // from the C12880MA spec
 uint16_t data[CHANNELS];
 const int DELAY = 500;
 
-// From the spec: the range is 340 -850 nm, distributed between 288 channels.
-// There must be something like this: (850 - 340)/288, approximately 1,77 nm per a channel, +/- 12 nm of spectral resolution.
 float stepNm =  1.9; // ad hoc
 
 // TFT pinout, see also  <libraries_dir>/TFT_ILI9341/User_Setup.h
@@ -155,21 +153,21 @@ void drawChart()
     tft.drawFastHLine(x0, y0, 288, TFT_BLACK);
 
     //X axis labels (ad hoc approximation!)
-    String xLabels[]={"34", "45", "53", "60", "65", "70", "75", "x10"};
+    String xLabels[]={"32", "43", "53", "60", "65", "70", "76", "x10"};
     const int yLabes = y0+7;
-    tft.setCursor(x0, yLabes);    //~340 nm, Violet 
+    tft.setCursor(x0, yLabes);    //~320 nm, Violet 
     tft.print(xLabels[0]);
-    tft.setCursor(x0+45, yLabes); //~450 nm, Blue 
+    tft.setCursor(x0+45, yLabes); //~429 nm, Blue 
     tft.print(xLabels[1]);
-    tft.setCursor(x0+91, yLabes); //~532 nm, Green laser 532nm
+    tft.setCursor(x0+87, yLabes); //~532 nm, Green laser 532nm
     tft.print(xLabels[2]);
-    tft.setCursor(x0+125, yLabes);//~600 nm, Yellow 
+    tft.setCursor(x0+117, yLabes);//~600 nm, Yellow 
     tft.print(xLabels[3]);
-    tft.setCursor(x0+145, yLabes);//~650 nm, Orange 
+    tft.setCursor(x0+140, yLabes);//~650 nm, Orange 
     tft.print(xLabels[4]);
-    tft.setCursor(x0+180, yLabes);//~700 nm, Red 
+    tft.setCursor(x0+166, yLabes);//~700 nm, Red 
     tft.print(xLabels[5]);
-    tft.setCursor(x0+231, yLabes);//~750 nm, end of visible red 
+    tft.setCursor(x0+200, yLabes);//~750 nm, end of visible red 
     tft.print(xLabels[6]);
     tft.setCursor(x0+280, yLabes);//x10 label
     tft.print(xLabels[7]);
