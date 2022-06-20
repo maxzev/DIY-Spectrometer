@@ -4,9 +4,9 @@ spectrometer/.settings/*
 spectrometer/.cproject
 spectrometer/.mxproject
 spectrometer/.project
-spectrometer/spectrometer\ Debug.launch
-spectrometer/STM32F401CEUX_FLASH.ld
-spectrometer/STM32F401CEUX_RAM.ld
+spectrometer/spectrometerF401cdu\ Debug.launch
+spectrometer/STM32F401CDUX_FLASH.ld
+spectrometer/STM32F401CDUX_RAM.ld
 
 
 
